@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Builds
+frontend/dist/
+backend/target/
+*.tsbuildinfo
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

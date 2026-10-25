@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: medlift-logistics-analyzer
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/medlift}
+    username: ${DB_USER:medlift}
+    password: ${DB_PASSWORD:medlift}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none   # Flyway owns the schema
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+medlift:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  ai:
+    provider: ${AI_PROVIDER:mock}        # mock | anthropic
+    model: ${AI_MODEL:claude-opus-5-5}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

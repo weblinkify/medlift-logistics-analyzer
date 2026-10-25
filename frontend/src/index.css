@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+  body { font-feature-settings: 'cv11', 'ss01'; }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #eef2f7 0%, #f8fafc 50%, #eef2f7 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+@keyframes dash { to { stroke-dashoffset: -24; } }
+.flight-path { animation: dash 1.2s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton, .flight-path { animation: none; }
+}
