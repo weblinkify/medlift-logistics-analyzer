@@ -1,5 +1,7 @@
 # MedLift Logistics Analyzer
 
+**Live demo:** https://medlift-logistics-analyzer.vercel.app (mock mode, runs fully in the browser)
+
 **Should this hospital shipment go by medical drone or road courier?**
 MedLift compares door-to-door time, cost and CO₂ for every shipment across a hospital network. It accounts for
 restricted airspace, weather, payload limits, drone-pad availability and cold-chain limits, and an AI
@@ -55,7 +57,7 @@ npm run dev          # http://localhost:5173  (NEXT_PUBLIC_API_MODE defaults to 
 │        ├─ MockAIAgent           (mode = mock)     │    │
 │        └─ BackendAIAgent        (mode = live) ────┤    │
 │                                                   ▼    │
-│  /api/v1/*  ──rewrite──►  api/proxy.ts (serverless) ───┼──► BACKEND_URL
+│  /api/v1/* ─rewrite─► frontend/api/proxy.ts (function) ┼──► BACKEND_URL
 └────────────────────────────────────────────────────────┘          │
                                                                     ▼
                          ┌──────────── Spring Boot API ─────────────┐
@@ -139,7 +141,9 @@ Errors are returned as RFC 7807 `ProblemDetail` JSON.
 
 ## Deploying to Vercel
 
-`vercel.json` (repo root) builds `frontend/` and serves `frontend/dist`.
+The Vercel project's **Root Directory is `frontend/`**. `frontend/vercel.json` builds the SPA and serves `dist/`,
+and `frontend/api/proxy.ts` is deployed as a serverless function. If you connect the GitHub repo in the Vercel
+dashboard, set *Root Directory → `frontend`*.
 
 | Setting | Demo (default) | Live backend |
 |---|---|---|
@@ -150,7 +154,7 @@ In live mode, `/api/v1/*` is rewritten to the `api/proxy.ts` serverless function
 allow-listed set of routes to `BACKEND_URL`, so the browser stays same-origin and the backend needs no public CORS.
 
 ```bash
-npx vercel --prod
+cd frontend && npx vercel deploy --prod
 ```
 
 The backend image (`backend/Dockerfile`) is a layered, non-root JRE image with a health check. It runs on any
@@ -181,8 +185,6 @@ detour. An **advisory** zone produces a warning only. Network projections assume
 
 ```
 .
-├── api/proxy.ts                    Vercel serverless mapping layer → Spring Boot
-├── vercel.json                     Build, rewrites, security headers
 ├── docker-compose.yml              PostgreSQL + API local loop
 ├── backend/
 │   ├── Dockerfile
@@ -194,11 +196,14 @@ detour. An **advisory** zone produces a warning only. Network projections assume
 │       │   ├── domain/             Records & enums (wire contract)
 │       │   └── repository/         JPA entities & repositories
 │       └── resources/db/migration/ V1 schema DDL, V2 seed network
-└── frontend/src/
-    ├── services/                   LogisticsService, MockLogisticsClient, LiveAxiosLogisticsClient
-    ├── ai/                         RouteOptimizationAgent, MockAIAgent, BackendAIAgent
-    ├── domain/                     Types, seed data, engine (port of the Java model)
-    └── components/                 Map, comparison, agent panel, KPI strip, rollout table
+└── frontend/                       Vercel project root
+    ├── vercel.json                 Build, rewrites, security headers
+    ├── api/proxy.ts                Serverless mapping layer → Spring Boot
+    └── src/
+        ├── services/               LogisticsService, MockLogisticsClient, LiveAxiosLogisticsClient
+        ├── ai/                     RouteOptimizationAgent, MockAIAgent, BackendAIAgent
+        ├── domain/                 Types, seed data, engine (port of the Java model)
+        └── components/             Map, comparison, agent panel, KPI strip, rollout table
 ```
 
 ## Tests
