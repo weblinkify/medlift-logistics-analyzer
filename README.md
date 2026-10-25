@@ -2,6 +2,8 @@
 
 **Live demo:** https://medlift-logistics-analyzer.vercel.app (mock mode, runs fully in the browser)
 
+[![MedLift: drone vs. courier analysis with airspace map and AI agent](docs/screenshot.jpg)](https://medlift-logistics-analyzer.vercel.app)
+
 **Should this hospital shipment go by medical drone or road courier?**
 MedLift compares door-to-door time, cost and CO₂ for every shipment across a hospital network. It accounts for
 restricted airspace, weather, payload limits, drone-pad availability and cold-chain limits, and an AI
